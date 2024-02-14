@@ -1,0 +1,12 @@
+---
+title: "FoodExpenditures"
+author: "Braden Critchfield and Thomas Olsen"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r}
+library(tidyverse)
+
+food <- read_delim("FoodExpenses.txt", delim=" ")
+```
