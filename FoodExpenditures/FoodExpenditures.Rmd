@@ -13,8 +13,24 @@ food <- read_delim("FoodExpenses.txt", delim=" ")
 
 
 # 1: Exploratory Plots and Summary Statistics
+```{r}
+ggplot(data = food, aes(y = EatingOut, x = Income)) +
+  geom_point() +
+  ggtitle("Avg. Eating Out Weekly Expenditure by Income Level")
+
+```
+
+There seems to be a positive linear relationship between annual household income and average weekly expenditure on food not cooked at home. However, it looks like the variance grows larger as Income grows larger.
 
 
+```{r}
+ggplot(data = food, aes(y = EatingOut, x = Income, group=Income)) +
+  geom_boxplot() +
+  ggtitle("Distributions of Eating Out Weekly Expenditure by Income Level")
+
+```
+
+Because Income is a discrete variable, this shows the distributions of Average weekly eating out expenditure per income level. This still shows a positive relationship between the two variables, and again shows how the variance grows as the income increases.
 
 # 2: Fit homoskedastic linear model
 
