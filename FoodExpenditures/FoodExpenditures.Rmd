@@ -10,3 +10,41 @@ library(tidyverse)
 
 food <- read_delim("FoodExpenses.txt", delim=" ")
 ```
+
+
+# 1: Exploratory Plots and Summary Statistics
+
+
+
+# 2: Fit homoskedastic linear model
+
+
+
+# 3: Write down heteroskedastic model
+
+
+
+# 4: Fit Model from Q3 to Eating Out and check assumptions
+
+
+
+
+# 5: Validate predictions via cross-validation
+
+
+
+
+# 6: Report Beta Hat and Variance Parameters
+
+
+
+
+# 7: Test if the economy is not healthy
+
+
+
+
+# 8: Predict your own restaurant spend
+
+
+
