@@ -12,8 +12,8 @@ library(lmtest)
 food <- read_delim("FoodExpenses.txt", delim=" ")
 ```
 
-
 # 1: Exploratory Plots and Summary Statistics
+
 ```{r}
 ggplot(data = food, aes(y = EatingOut, x = Income)) +
   geom_point() +
@@ -22,7 +22,6 @@ ggplot(data = food, aes(y = EatingOut, x = Income)) +
 ```
 
 There seems to be a positive linear relationship between annual household income and average weekly expenditure on food not cooked at home. However, it looks like the variance might grow larger as Income grows larger.
-
 
 ```{r}
 ggplot(data = food, aes(y = EatingOut, x = Income, group=Income)) +
@@ -34,6 +33,7 @@ ggplot(data = food, aes(y = EatingOut, x = Income, group=Income)) +
 Because Income is a discrete variable, this shows the distributions of Average weekly eating out expenditure per income level. This still shows a positive relationship between the two variables, and again shows how the variance seems to grow as the income increases.
 
 Here are the summary statistics:
+
 ```{r}
 summary(food)
 
@@ -41,8 +41,8 @@ summary(food)
 
 ```
 
-
 # 2: Fit homoskedastic linear model
+
 ```{r}
 food.lm <- lm(EatingOut ~ ., data = food)
 summary(food.lm)
@@ -63,6 +63,7 @@ Since this assumption is not met, it affects our inference because all of our st
 # 3: Write down heteroskedastic model
 The heteroskedastic linear regression model is written as follows:
 
+<<<<<<< HEAD
 $$y \sim N(X\boldsymbol\beta, \sigma^2D(\theta)) \hspace{10pt} d_{ii} = exp(2Income_{i}\theta)$$
 where 
 
@@ -95,25 +96,49 @@ With this model, we will have an accurate estimation of standard error, so we ca
 
 # 4: Fit Model from Q3 to Eating Out and check assumptions
 
+```{r}
+hetero_sked = gls(data = food, EatingOut ~ Income, weights = 
+                    varExp(form=~Income), method="ML")
+coef = hetero_sked$coefficients
+```
+
+#### Linearity
+
+The avplot shows a linear relationship between eating out and income.
+
+```{r}
+avPlots(food.lm)
+
+```
+
+#### Independence
+
+It is a reasonable assumption that the eating out habits of one person does not affect the eating out habits of another.
+
+#### Normality
+
+The below histogram show that the residuals are normally distributed.
+
+```{r}
+stdResids_food = resid(object=hetero_sked, type="pearson")
 
 
+hist(stdResids_food)
+
+```
+
+#### Equal Variance
+
+```{r}
+bp_test <- bptest(stdResids_food ~ Income, data = food)
+```
+
+The above plot shows that the equal variance has been accounted for by the gls model. The Breusch-Pagan test verifies this with p-value of `r bp_test$p.value` . Since the p-value is above .05 we fail to reject the null hypothesis that there is heteroskedasticity and conclude that that there is no heteroskedasticity.
 
 # 5: Validate predictions via cross-validation
 
-
-
-
 # 6: Report Beta Hat and Variance Parameters
-
-
-
 
 # 7: Test if the economy is not healthy
 
-
-
-
 # 8: Predict your own restaurant spend
-
-
-
