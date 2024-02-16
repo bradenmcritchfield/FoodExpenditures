@@ -49,6 +49,7 @@ summary(food)
 
 
 
+
 # 4: Fit Model from Q3 to Eating Out and check assumptions
 
 
