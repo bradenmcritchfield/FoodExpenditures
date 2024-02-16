@@ -58,6 +58,8 @@ bptest(food.lm)
 
 The equal variance assumption is not met. From the residuals vs. fitted values plot, the spread of the data points grows as income grows. This is confirmed by the Breusch-Pagan test, where we can reject the null hypothesis that there is equal variance and assume the variance is unequal.
 
+Since this assumption is not met, 
+
 # 3: Write down heteroskedastic model
 
 

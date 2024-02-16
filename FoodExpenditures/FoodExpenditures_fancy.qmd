@@ -58,10 +58,40 @@ bptest(food.lm)
 
 The equal variance assumption is not met. From the residuals vs. fitted values plot, the spread of the data points grows as income grows. This is confirmed by the Breusch-Pagan test, where we can reject the null hypothesis that there is equal variance and assume the variance is unequal.
 
+Since this assumption is not met, it affects our inference because all of our standard errors will be off, and some of our coefficients could be off as well. This could lead to us concluding variables are significant when they are not, identifying confidence intervals that are wrong, etc.
+
 # 3: Write down heteroskedastic model
+The heteroskedastic linear regression model is written as follows:
 
+$$y \sim N(X\boldsymbol\beta, \sigma^2D(\theta)) \hspace{10pt} d_{ii} = exp(2Income_{i}\theta)$$
+where 
 
+$$
+\mathbf{y} = \begin{bmatrix}
+  EatingOut_1 \\
+  EatingOut_2 \\
+  \vdots \\
+  EatingOut_n
+\end{bmatrix}
+$$
+$$
+\mathbf{X} = \begin{bmatrix}
+  1 & x_1 \\
+  1 & x_2 \\
+  \vdots & \vdots \\
+  1 & x_n
+\end{bmatrix}
+$$
 
+$$
+\mathbf{\boldsymbol\beta} = \begin{bmatrix}
+  \beta_0 \\
+  \beta_{Income}
+\end{bmatrix}
+
+$$
+
+With this model, we will have an accurate estimation of standard error, so we can test whether income has a significant effect on eating out expenditure, as well as build a confidence interval to see what the estimated effect is.
 
 # 4: Fit Model from Q3 to Eating Out and check assumptions
 
