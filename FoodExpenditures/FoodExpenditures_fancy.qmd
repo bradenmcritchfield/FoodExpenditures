@@ -13,7 +13,10 @@ library(multcomp)
 library(GGally)
 library(MASS)
 library(car)
+<<<<<<< HEAD
 source("predictgls.R")
+=======
+>>>>>>> 1b68e033d4b5a1c4b436024bb338c1896f5c4081
 
 food <- read_delim("FoodExpenses.txt", delim=" ")
 ```
@@ -195,6 +198,26 @@ theme_bw()
 
 
 # 6: Report Beta Hat and Variance Parameters
+
+```{r}
+income = hetero_sked$coefficients[2]
+conf_income = intervals(hetero_sked, level = .95)
+lwr = conf_income$coef[2]
+upr = conf_income$coef[6]
+```
+
+The coefficient for \hat{\beta}\_{\text{inc}} is `r round(income,3)`. A 95% confidence interval for income is `r lwr`  - `r upr`. We are 95% confident that for every one increase in Income, Eating Out goes up between `r lwr` and `r upr`. Since the interval does not contain 0 we reject the null hypothesis that Income has no affect on average weekly expenditure on food not cooked at home and conclude that there is an affect. 
+
+```{r}
+intervals(hetero_sked, level = .95)$varStruct[c(1,3)]
+theta = conf_income$varStruct[2]
+```
+
+The point estimate for theta is `r theta`.
+The 95% confidence interval for $\theta$ in the variance function is (.0112, .0159). 
+
+Because the 95% confidence interval for $\theta$ contains only positive numbers, as income increases, there is higher variability in the average weekly expenditure on food not cooked at home.
+
 
 # 7: Test if the economy is not healthy
 
