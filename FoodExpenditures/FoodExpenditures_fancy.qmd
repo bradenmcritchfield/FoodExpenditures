@@ -1,8 +1,9 @@
 ---
-title: "FoodExpenditures"
+title: "Food Expenditures"
+format: pdf
+editor: visual
 author: "Braden Critchfield and Thomas Olsen"
 date: "`r Sys.Date()`"
-output: pdf_document
 ---
 
 ```{r, message=FALSE,warning=FALSE}
@@ -63,14 +64,15 @@ The equal variance assumption is not met. From the residuals vs. fitted values p
 Since this assumption is not met, it affects our inference because all of our standard errors will be off, and some of our coefficients could be off as well. This could lead to us concluding variables are significant when they are not, identifying confidence intervals that are wrong, etc.
 
 # 3: Write down heteroskedastic model
+
 The heteroskedastic linear regression model is written as follows:
 
 $$y \sim N(X\boldsymbol\beta, \sigma^2D(\theta)) \hspace{10pt} d_{ii} = exp(2Income_{i}\theta)$$
 
-where 
+where
 
 $$
-\mathbf{y} = \begin{bmatrix}
+\textbf{y} = \begin{bmatrix}
   EatingOut_1 \\
   EatingOut_2 \\
   \vdots \\
@@ -79,7 +81,7 @@ $$
 $$
 
 $$
-\mathbf{X} = \begin{bmatrix}
+\textbf{X} = \begin{bmatrix}
   1 & x_1 \\
   1 & x_2 \\
   \vdots & \vdots \\
@@ -88,11 +90,10 @@ $$
 $$
 
 $$
-\mathbf{\boldsymbol\beta} = \begin{bmatrix}
+{\boldsymbol\beta} = \begin{bmatrix}
   \beta_0 \\
   \beta_{Income}
 \end{bmatrix}
-
 $$
 
 With this model, we will have an accurate estimation of standard error, so we can test whether income has a significant effect on eating out expenditure, as well as build a confidence interval to see what the estimated effect is.
@@ -134,11 +135,15 @@ hist(stdResids_food)
 
 ```{r}
 bp_test <- bptest(stdResids_food ~ Income, data = food)
+fits = hetero_sked$fitted
+stdResids_food = resid(object=hetero_sked, type="pearson")
+plot(fits,stdResids_food)
 ```
 
 The above plot shows that the equal variance has been accounted for by the gls model. The Breusch-Pagan test verifies this with p-value of `r bp_test$p.value` . Since the p-value is above .05 we fail to reject the null hypothesis that there is heteroskedasticity and conclude that that there is no heteroskedasticity.
 
 # 5: Validate predictions via cross-validation
+
 ```{r}
 n.cv <- 100 #Number of CV studies to run
 n.test <- 200 #Number of observations in a test set
@@ -194,7 +199,6 @@ theme_bw()
 
 ```
 
-
 # 6: Report Beta Hat and Variance Parameters
 
 ```{r}
@@ -204,33 +208,38 @@ lwr = conf_income$coef[2]
 upr = conf_income$coef[6]
 ```
 
-The coefficient for $\hat{\beta}_{\text{inc}}$ is `r round(income,3)`. A 95% confidence interval for income is `r lwr`  - `r upr`. We are 95% confident that for every one increase in Income, Eating Out goes up between `r lwr` and `r upr`. Since the interval does not contain 0 we reject the null hypothesis that Income has no affect on average weekly expenditure on food not cooked at home and conclude that there is an affect. 
+The coefficient for $\hat{\beta}_{\text{inc}}$ is `r round(income,3)`. A 95% confidence interval for income is `r lwr` - `r upr`. We are 95% confident that for every one increase in Income, Eating Out goes up between `r lwr` and `r upr`. Since the interval does not contain 0 we reject the null hypothesis that Income has no affect on average weekly expenditure on food not cooked at home and conclude that there is an affect.
 
 ```{r}
 intervals(hetero_sked, level = .95)$varStruct[c(1,3)]
 theta = conf_income$varStruct[2]
 ```
 
-The point estimate for theta is `r theta`.
-The 95% confidence interval for $\theta$ in the variance function is (.0112, .0159). 
+The point estimate for theta is `r theta`. The 95% confidence interval for $\theta$ in the variance function is (.0112, .0159).
 
 Because the 95% confidence interval for $\theta$ contains only positive numbers, as income increases, there is higher variability in the average weekly expenditure on food not cooked at home.
 
+# 7: Test if the economy is not healthy
 
-# 7: Test if the economy is not healthy **ask TAs tmw**
 ```{r}
-linCombo = c(0,.50)
+linCombo = c(0,1) # just a placeholder value to pick off the coeff
+# we want
 
-summary(glht(hetero_sked, linfct = t(linCombo)))
+econ = summary(glht(hetero_sked, linfct = t(linCombo), alternative = "less",rhs = .50))
+
+broom::tidy(summary(econ)) %>% kableExtra::kbl(booktabs = T)
 ```
 
+$H_0$ is the economy is healthy $\hat{\beta}_{\text{inc}}$ = .50 $H_A$ is the economy is not health $\hat{\beta}_{\text{inc}}$ \<.50
+
+The p-value is 0.0000125. Since the p-value is less than .05 we reject the null hypothesis and conclude that the economy is not healthy.
 
 # 8: Predict your own restaurant spend
+
 ```{r}
 x <- data.frame(Income = 6.24)
 thomas_predict <- predictgls(glsobj=hetero_sked, newdframe=x, level=.95)
 c(thomas_predict[["lwr"]], thomas_predict[["upr"]])
 ```
 
-Thomas and I estimated our first salary to be \$62400. At this salary, we are 95% confident we will each spend between \$15.77 and \$28.13 a week on eating out. 
-
+Thomas and I estimated our first salary to be \$62400. At this salary, we are 95% confident we will each spend between \$15.77 and \$28.13 a week on eating out.
