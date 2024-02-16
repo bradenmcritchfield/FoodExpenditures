@@ -32,6 +32,15 @@ ggplot(data = food, aes(y = EatingOut, x = Income, group=Income)) +
 
 Because Income is a discrete variable, this shows the distributions of Average weekly eating out expenditure per income level. This still shows a positive relationship between the two variables, and again shows how the variance grows as the income increases.
 
+Here are the summary statistics:
+```{r}
+summary(food)
+
+
+
+```
+
+
 # 2: Fit homoskedastic linear model
 
 
