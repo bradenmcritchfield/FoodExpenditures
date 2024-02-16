@@ -220,3 +220,11 @@ Because the 95% confidence interval for $\theta$ contains only positive numbers,
 # 7: Test if the economy is not healthy
 
 # 8: Predict your own restaurant spend
+```{r}
+x <- data.frame(Income = 6.24)
+thomas_predict <- predictgls(glsobj=hetero_sked, newdframe=x, level=.95)
+c(thomas_predict[["lwr"]], thomas_predict[["upr"]])
+```
+
+Thomas and I estimated our first salary to be \$62400. At this salary, we are 95% confident we will each spend between \$15.77 and \$28.13 a week on eating out. 
+
