@@ -7,6 +7,7 @@ output: pdf_document
 
 ```{r}
 library(tidyverse)
+library(lmtest)
 
 food <- read_delim("FoodExpenses.txt", delim=" ")
 ```
@@ -20,7 +21,7 @@ ggplot(data = food, aes(y = EatingOut, x = Income)) +
 
 ```
 
-There seems to be a positive linear relationship between annual household income and average weekly expenditure on food not cooked at home. However, it looks like the variance grows larger as Income grows larger.
+There seems to be a positive linear relationship between annual household income and average weekly expenditure on food not cooked at home. However, it looks like the variance might grow larger as Income grows larger.
 
 
 ```{r}
@@ -30,7 +31,7 @@ ggplot(data = food, aes(y = EatingOut, x = Income, group=Income)) +
 
 ```
 
-Because Income is a discrete variable, this shows the distributions of Average weekly eating out expenditure per income level. This still shows a positive relationship between the two variables, and again shows how the variance grows as the income increases.
+Because Income is a discrete variable, this shows the distributions of Average weekly eating out expenditure per income level. This still shows a positive relationship between the two variables, and again shows how the variance seems to grow as the income increases.
 
 Here are the summary statistics:
 ```{r}
@@ -42,10 +43,23 @@ summary(food)
 
 
 # 2: Fit homoskedastic linear model
+```{r}
+food.lm <- lm(EatingOut ~ ., data = food)
+summary(food.lm)
 
 
+```
+
+```{r}
+ggplot()+geom_point(mapping=aes(x=fitted(food.lm), y =  resid(food.lm)))
+
+bptest(food.lm)
+```
+
+The equal variance assumption is not met. From the residuals vs. fitted values plot, the spread of the data points grows as income grows. This is confirmed by the Breusch-Pagan test, where we can reject the null hypothesis that there is equal variance and assume the variance is unequal.
 
 # 3: Write down heteroskedastic model
+
 
 
 
