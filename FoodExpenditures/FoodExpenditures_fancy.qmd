@@ -13,10 +13,8 @@ library(multcomp)
 library(GGally)
 library(MASS)
 library(car)
-<<<<<<< HEAD
 source("predictgls.R")
-=======
->>>>>>> 1b68e033d4b5a1c4b436024bb338c1896f5c4081
+
 
 food <- read_delim("FoodExpenses.txt", delim=" ")
 ```
